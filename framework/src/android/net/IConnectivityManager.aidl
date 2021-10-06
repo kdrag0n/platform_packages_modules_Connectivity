@@ -228,4 +228,6 @@ interface IConnectivityManager
     void unofferNetwork(in INetworkOfferCallback callback);
 
     void setTestAllowBadWifiUntil(long timeMs);
+
+    void onPackagePermissionChanged(int uid);
 }
