@@ -32,6 +32,7 @@ import static android.os.Process.SYSTEM_UID;
 import static com.android.net.module.util.CollectionUtils.toIntArray;
 
 import android.annotation.NonNull;
+import android.annotation.UserIdInt;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -276,6 +277,10 @@ public class PermissionMonitor {
         log("Users: " + mUsers.size() + ", Apps: " + mApps.size());
         update(mUsers, mApps, true);
         sendPackagePermissionsToNetd(netdPermsUids);
+    }
+
+    public void onInternetPermissionChanged(int uid) {
+        sendPackagePermissionsForUid(UserHandle.getAppId(uid), getPermissionForUid(uid));
     }
 
     @VisibleForTesting
