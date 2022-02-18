@@ -3146,14 +3146,16 @@ public class ConnectivityManager {
      */
     public void reportNetworkConnectivity(@Nullable Network network, boolean hasConnectivity) {
         printStackTrace();
-        if (mContext.checkSelfPermission(Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+        try {
+            mService.reportNetworkConnectivity(network, hasConnectivity);
+        } catch (SecurityException e) {
             // ConnectivityService enforces this by throwing an unexpected SecurityException,
             // which puts GMS into a crash loop. Also useful for other apps that don't expect that
             // INTERNET permission might get revoked.
-            return;
-        }
-        try {
-            mService.reportNetworkConnectivity(network, hasConnectivity);
+            if (mContext.checkSelfPermission(Manifest.permission.INTERNET) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                throw e;
+            }
         } catch (RemoteException e) {
             throw e.rethrowFromSystemServer();
         }
